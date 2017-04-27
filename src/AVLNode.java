@@ -127,5 +127,34 @@ public class AVLNode<String> {
         return rotateWithLeftChild(k3);
     }
 
+    public AVLNode<String> findMin(AVLNode<String> t)
+    {
+        while(t != null)
+            t = t.left;
+
+        return t;
+    }
+
+    public AVLNode<String> remove( String x, AVLNode<String> t )
+     {
+         if( t == null )
+             return t; // Item not found; do nothing
+
+         int compareResult = x.toString().compareTo(t.getElement().toString());
+
+         if( compareResult < 0 )
+             t.left = remove( x, t.left );
+         else if( compareResult > 0 )
+             t.right = remove( x, t.right );
+         else if( t.left != null && t.right != null ) // Two children
+             {
+             t.element = findMin( t.right ).element;
+             t.right = remove( t.element, t.right );
+             }
+         else
+         t = ( t.left != null ) ? t.left : t.right;
+         return balance( t );
+         }
+
 
 }
