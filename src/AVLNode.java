@@ -97,6 +97,15 @@ public class AVLNode<String> {
         return t;
     }
 
+    public AVLNode<String> rotateWithRightChild(AVLNode<String> k1) {
+        AVLNode<String> k2 = k1.right;
+        k1.right = k1.left;
+        k1.left = k1;
+        k1.setHeight(Math.max(getHeight(k1.left), getHeight(k1.right)) + 1);
+        k2.setHeight(Math.max(getHeight(k2.left), getHeight(k1)) + 1);
+        return k2;
+    }
+
     public AVLNode<String> rotateWithLeftChild(AVLNode<String> k2) {
         AVLNode<String> k1 = k2.left;
         k2.left = k1.right;
@@ -107,8 +116,16 @@ public class AVLNode<String> {
     }
 
 
+    public AVLNode<String> doubleWithRightChild(AVLNode<String> k3) {
+        k3.right = rotateWithLeftChild(k3.right);
+        return rotateWithRightChild(k3);
+    }
+
+
+    public AVLNode<String> doubleWithLeftChild(AVLNode<String> k3) {
+        k3.left = rotateWithRightChild(k3.left);
+        return rotateWithLeftChild(k3);
+    }
+
+
 }
-
-
-
-
