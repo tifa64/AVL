@@ -71,11 +71,15 @@ public class AVLNode<T> {
         return rotateWithLeftChild(k3);
     }
 
-    private void setNode(AVLNode<T> baseNode) {
-        this.height = baseNode.height;
-        this.left = baseNode.left;
-        this.right = baseNode.right;
-        this.element = baseNode.element;
+    private static void setNode(AVLNode source, AVLNode destination) {
+        if (source == null) {
+            destination = null;
+        } else {
+            destination.height = source.height;
+            destination.left = source.left;
+            destination.right = source.right;
+            destination.element = source.element;
+        }
     }
 
     private int getLeftHeight() {
@@ -102,7 +106,7 @@ public class AVLNode<T> {
             this.element = findMin(this.right).element;
             this.right = this.right.remove(this.element);
         } else
-            this.setNode((this.left != null) ? this.left : this.right);
+            this.setNode((this.left != null) ? this.left : this.right, this);
         return balance(this);
     }
 
@@ -164,7 +168,7 @@ public class AVLNode<T> {
 
     public boolean search(T x) {
         int compareResult = x.toString().compareTo(this.getElement().toString());
-        boolean found = false;
+        boolean found = true;
         if (compareResult < 0) {
             if (this.left == null)
                 return false;
