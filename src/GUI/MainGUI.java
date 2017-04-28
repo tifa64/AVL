@@ -45,7 +45,7 @@ public class MainGUI extends JDialog {
         }
     }
 
-    private void initComponents(){
+    private void initComponents() {
         loadFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -79,97 +79,97 @@ public class MainGUI extends JDialog {
         insertButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (fileForOperations == null){
+                if (fileForOperations == null) {
 
-                        String word = wordTextField.getText();
-                        sb.append(word + ' ');
-                        sb.append(t.insertWord(word));
+                    String word = wordTextField.getText();
+                    sb.append(word + ' ');
+                    sb.append(t.insertWord(word) + "\n");
 
-                    } else {
+                } else {
                     try {
                         boolean[] inserted = t.insertWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
-                        for(String s : lines)
-                        {
+                        for (String s : lines) {
                             sb.append(s + ' ');
-                            sb.append(inserted[i]);
+                            sb.append(inserted[i] + "\n");
 
                         }
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 }
-
+                textArea1.setText(sb.toString());
             }
         });
 
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (fileForOperations == null){
+                if (fileForOperations == null) {
                     String word = wordTextField.getText();
                     sb.append(word + ' ');
                     try {
-                        sb.append(t.searchWord(word));
+                        sb.append(t.searchWord(word) + "\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                 } else {
                     try {
-                        boolean [] founded = t.searchWords(fileForOperations);
+                        boolean[] founded = t.searchWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
-                        for(String s : lines)
-                        {
+                        for (String s : lines) {
                             sb.append(s + ' ');
-                            sb.append(founded[i]);
+                            sb.append(founded[i] + "\n");
                         }
 
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                 }
+                textArea1.setText(sb.toString());
             }
         });
 
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (fileForOperations == null){
+                if (fileForOperations == null) {
                     String word = wordTextField.getText();
                     sb.append(word + ' ');
                     try {
-                        sb.append(t.deleteWord(word));
+                        sb.append(t.deleteWord(word) + "\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
 
                 } else {
                     try {
-                        boolean [] deleted = t.deleteWords(fileForOperations);
+                        boolean[] deleted = t.deleteWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
-                        for(String s : lines)
-                        {
+                        for (String s : lines) {
                             sb.append(s + ' ');
-                            sb.append(deleted[i]);
+                            sb.append(deleted[i] + "\n");
                         }
 
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                 }
-
-                }
+                textArea1.setText(sb.toString());
+            }
         });
 
         printSizeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                sb.append("Size of Dictionary : " + "\n" + t.getSize());
-                sb.append("Height of Tree : " + "\n" + t.getHeight());
+                sb.append("Size of Dictionary : " + t.getSize() + "\n");
+                sb.append("Height of Tree : " + t.getHeight() + "\n");
+
+                textArea1.setText(sb.toString());
 
             }
         });
