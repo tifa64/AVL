@@ -50,25 +50,31 @@ public class Tree {
         }
     }
 
-    public void deleteWord(String word) throws Exception {
+    public boolean deleteWord(String word) throws Exception {
         if (root != null){
             AVLNode<String> deletedNode = root.delete(word);
             if (deletedNode == null) {
-                throw new Exception("Node not found");
+                return false;
             }
+            size--;
+            return true;
         } else {
             throw new Exception("Tree is empty");
         }
     }
 
-    public void deleteWords(File file) throws Exception {
+    public boolean[] deleteWords(File file) throws Exception {
         try {
             List<String> lines = Files.readAllLines(Paths.get(file.getPath()));
+            boolean[] deleted = new boolean[lines.size()];
+            int i = 0;
             for (String line : lines) {
-                this.deleteWord(line);
+                deleted[i] = this.deleteWord(line);
             }
+            return deleted;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
