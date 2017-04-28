@@ -9,61 +9,53 @@ public class AVLNode<T> {
     private T element; // The data in the node
     private AVLNode<T> left; // Left child
     private AVLNode<T> right; // Right child
-    private int height; // Height
 
 
     public AVLNode(T theElement) {
         this(theElement, null, null);
-        this.height = 0;
     }
 
     public AVLNode(T theElement, AVLNode<T> lt, AVLNode<T> rt) {
         element = theElement;
         left = lt;
         right = rt;
-        height = (Math.max((lt.right.height), (rt.left.height)) + 1);
     }
 
     private static AVLNode balance(AVLNode t) {
         if (t == null)
             return t;
 
-        if (t.left.height - t.right.height > ALLOWED_IMBALANCE)
-            if (t.left.left.height >= t.left.right.height)
+        if (t.getLeftHeight() - t.getRightHeight() > ALLOWED_IMBALANCE)
+            if ((t.left == null ? 0 : t.left.getLeftHeight()) >= (t.left == null ? 0 : t.left.getRightHeight()))
                 t = rotateWithLeftChild(t);
             else
                 t = doubleWithLeftChild(t);
-        else if (t.right.height - t.left.height > ALLOWED_IMBALANCE)
-            if (t.right.right.height >= t.right.left.height)
+        else if (t.getRightHeight() - t.getLeftHeight() > ALLOWED_IMBALANCE)
+            if ((t.right == null ? 0 : t.right.getRightHeight()) >= (t.right == null ? 0 : t.right.getLeftHeight()))
                 t = rotateWithRightChild(t);
             else
                 t = doubleWithRightChild(t);
 
-        t.height = (Math.max(t.left.height, t.right.height) + 1);
         return t;
     }
 
     private static AVLNode rotateWithRightChild(AVLNode k1) {
         AVLNode k2 = k1.right;
-        k1.right = k1.left;
-        k1.left = k1;
-        k1.height = (Math.max((k1.left.height), (k1.right.height)) + 1);
-        k2.height = (Math.max((k2.left.height), (k1.height)) + 1);
+        k1.right = k2.left;
+        k2.left = k1;
         return k2;
     }
 
-    private static AVLNode rotateWithLeftChild(AVLNode k1) {
-        AVLNode k2 = k1.left;
-        k1.left = k1.right;
-        k1.right = k1;
-        k1.height = (Math.max((k1.right.height), (k1.left.height)) + 1);
-        k2.height = (Math.max((k2.right.height), (k1.height)) + 1);
-        return k2;
+    private static AVLNode rotateWithLeftChild(AVLNode k2) {
+        AVLNode k1 = k2.left;
+        k2.left = k1.right;
+        k1.right = k2;
+        return k1;
     }
 
-    private static AVLNode doubleWithRightChild(AVLNode k3) {
-        k3.right = rotateWithLeftChild(k3.right);
-        return rotateWithRightChild(k3);
+    private static AVLNode doubleWithRightChild(AVLNode k1) {
+        k1.right = rotateWithLeftChild(k1.right);
+        return rotateWithRightChild(k1);
     }
 
     private static AVLNode doubleWithLeftChild(AVLNode k3) {
@@ -71,31 +63,32 @@ public class AVLNode<T> {
         return rotateWithLeftChild(k3);
     }
 
-    private void setNode(AVLNode<T> baseNode) {
-        this.height = baseNode.height;
-        this.left = baseNode.left;
-        this.right = baseNode.right;
-        this.element = baseNode.element;
+    private int getLeftHeight() {
+        return this.left == null ? 0 : this.left.getHeight();
     }
 
-    private AVLNode<T> remove(T x) {
-        int compareResult = x.toString().compareTo(this.getElement().toString());
+    private int getRightHeight() {
+        return this.right == null ? 0 : this.right.getHeight();
+    }
+
+    private static AVLNode remove(Object x, AVLNode source) {
+        int compareResult = x.toString().compareTo(source.element.toString());
 
         if (compareResult < 0) {
-            if (this.left == null)
+            if (source.left == null)
                 return null;
-            this.left = this.left.remove(x);
+            source.left = remove(x, source.left);
         } else if (compareResult > 0) {
-            if (this.right == null)
+            if (source.right == null)
                 return null;
-            this.right = this.right.remove(x);
-        } else if (this.left != null && this.right != null) // Two children
-        {
-            this.element = findMin(this.right).element;
-            this.right = this.right.remove(this.element);
+            source.right = remove(x, source.right);
+        } else if (source.left != null && source.right != null) {
+            // Two children
+            source.element = source.findMin(source.right).element;
+            source.right = remove(source.element, source.right);
         } else
-            this.setNode((this.left != null) ? this.left : this.right);
-        return balance(this);
+            source = source.left != null ? source.left : source.right;
+        return balance(source);
     }
 
     public T getElement() {
@@ -123,27 +116,31 @@ public class AVLNode<T> {
     }
 
     public int getHeight() {
-        return height;
+        return 1 + Math.max(this.left == null ? 0 : this.left.getHeight(), this.right == null ? 0 : this.right.getHeight());
     }
 
     public AVLNode<T> insert(T x) throws Exception {
-
-
-        T treeElement = x;
         int compareResult = x.toString().compareTo(this.element.toString());
-
-        if (compareResult < 0)
-            this.left = insert(x);
-
-        else if (compareResult > 0)
-            this.right = insert(x);
-        else
+        if (compareResult < 0) {
+            if (this.left != null) {
+                this.left = this.left.insert(x);
+            } else {
+                this.left = new AVLNode<T>(x);
+            }
+        } else if (compareResult > 0) {
+            if (this.right != null) {
+                this.right = this.right.insert(x);
+            } else {
+                this.right = new AVLNode<T>(x);
+            }
+        } else {
             throw new Exception("Duplicate");
+        }
         return balance(this);
     }
 
     public AVLNode<T> findMin(AVLNode<T> t) {
-        while (t != null)
+        while (t.left != null)
             t = t.left;
 
         return t;
@@ -151,7 +148,7 @@ public class AVLNode<T> {
 
     public boolean search(T x) {
         int compareResult = x.toString().compareTo(this.getElement().toString());
-        boolean found = false;
+        boolean found = true;
         if (compareResult < 0) {
             if (this.left == null)
                 return false;
@@ -167,7 +164,7 @@ public class AVLNode<T> {
 
     public AVLNode<T> delete(T x) {
         if (search(x))
-            return remove(x);
+            return remove(x, this);
 
         return null;
     }

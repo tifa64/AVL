@@ -25,7 +25,7 @@ public class Tree {
             return true;
         } else {
             try {
-                root.insert(word);
+                root = root.insert(word);
                 size++;
                 return true;
             } catch (Exception e) {
@@ -51,12 +51,21 @@ public class Tree {
     }
 
     public boolean deleteWord(String word) throws Exception {
-        if (root != null){
+        if (root != null) {
+            if (root.getElement().equals(word) && size == 1) {
+                size--;
+                root = null;
+                return true;
+            }
             AVLNode<String> deletedNode = root.delete(word);
             if (deletedNode == null) {
                 return false;
             }
+            root = deletedNode;
             size--;
+            if (size == 0) {
+                this.root = null;
+            }
             return true;
         } else {
             throw new Exception("Tree is empty");
@@ -70,6 +79,7 @@ public class Tree {
             int i = 0;
             for (String line : lines) {
                 deleted[i] = this.deleteWord(line);
+                i++;
             }
             return deleted;
         } catch (IOException e) {
@@ -108,6 +118,6 @@ public class Tree {
     }
 
     public int getHeight() {
-        return this.root.getHeight();
+        return this.root == null? 0 : this.root.getHeight();
     }
 }
