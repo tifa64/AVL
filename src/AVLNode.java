@@ -4,19 +4,19 @@ import java.lang.*;
 /**
  * Created by Krietallo on 4/27/2017.
  */
-public class AVLNode<String> {
+public class AVLNode<T> {
 
-    AVLNode(String theElement) {
+    AVLNode(T theElement) {
         this(theElement, null, null);
     }
 
-    private String element; // The data in the node
-    private AVLNode<String> left; // Left child
-    private AVLNode<String> right; // Right child
+    private T element; // The data in the node
+    private AVLNode<T> left; // Left child
+    private AVLNode<T> right; // Right child
     private int height; // Height
     private static final int ALLOWED_IMBALANCE = 1; //Difference between left and right subtrees
 
-    AVLNode(String theElement, AVLNode<String> lt, AVLNode<String> rt) {
+    AVLNode(T theElement, AVLNode<T> lt, AVLNode<T> rt) {
         element = theElement;
         left = lt;
         right = rt;
@@ -24,110 +24,102 @@ public class AVLNode<String> {
     }
 
 
-    public String getElement() {
+    public T getElement() {
         return element;
     }
 
-    public void setElement(String element) {
+    public void setElement(T element) {
         this.element = element;
     }
 
-    public AVLNode<String> getLeft() {
+    public AVLNode<T> getLeft() {
         return left;
     }
 
-    public void setLeft(AVLNode<String> left) {
+    public void setLeft(AVLNode<T> left) {
         this.left = left;
     }
 
-    public AVLNode<String> getRight() {
+    public AVLNode<T> getRight() {
         return right;
     }
 
-    public void setRight(AVLNode<String> right) {
+    public void setRight(AVLNode<T> right) {
         this.right = right;
     }
 
-    public int getHeight(AVLNode<String> avl) {
+    public int getHeight() {
 
-        if (avl == null)
-            return 0;
-
-        height = 1 + Math.max(getHeight(avl.left), getHeight(avl.right));
         return height;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
+
+    public AVLNode<T> insert(T x) {
 
 
-    private AVLNode<String> insert(String x, AVLNode<String> t) {
-        if (t == null)
-            return new AVLNode<>(x, null, null);
-
-        String treeElement = t.element;
-        int compareResult = x.toString().compareTo(t.getElement().toString());
+        T treeElement = x ;
+        int compareResult = x.toString().compareTo(this.element.toString());
 
         if (compareResult < 0)
-            t.left = insert(x, t.left);
+            this.left = insert(x);
+
         else if (compareResult > 0)
-            t.right = insert(x, t.right);
+            this.right = insert(x);
         else
             System.out.println("Duplicate");
-        return balance(t);
+        return balance(this);
     }
 
-    private AVLNode<String> balance(AVLNode<String> t) {
+    private static AVLNode balance(AVLNode t) {
         if (t == null)
             return t;
 
-        if (getHeight(t.left) - getHeight(t.right) > ALLOWED_IMBALANCE)
-            if (getHeight(t.left.left) >= getHeight(t.left.right))
+        if (t.left.height - t.right.height > ALLOWED_IMBALANCE)
+            if (t.left.left.height >= t.left.right.height)
                 t = rotateWithLeftChild(t);
             else
                 t = doubleWithLeftChild(t);
-        else if (getHeight(t.right) - getHeight(t.left) > ALLOWED_IMBALANCE)
-            if (getHeight(t.right.right) >= getHeight(t.right.left))
+        else if (t.right.height - t.left.height > ALLOWED_IMBALANCE)
+            if (t.right.right.height >= t.right.left.height)
                 t = rotateWithRightChild(t);
             else
                 t = doubleWithRightChild(t);
 
-        t.setHeight(Math.max(getHeight(t.left), getHeight(t.right)) + 1);
+        t.height = (Math.max(t.left.height, t.right.height) + 1);
         return t;
     }
 
-    public AVLNode<String> rotateWithRightChild(AVLNode<String> k1) {
-        AVLNode<String> k2 = k1.right;
+    public static AVLNode rotateWithRightChild(AVLNode k1) {
+        AVLNode k2 = k1.right;
         k1.right = k1.left;
         k1.left = k1;
-        k1.setHeight(Math.max(getHeight(k1.left), getHeight(k1.right)) + 1);
-        k2.setHeight(Math.max(getHeight(k2.left), getHeight(k1)) + 1);
+        k1.height = (Math.max((k1.left.height), (k1.right.height)) + 1);
+        k2.height = (Math.max((k2.left.height), (k1.height)) + 1);
         return k2;
     }
 
-    public AVLNode<String> rotateWithLeftChild(AVLNode<String> k2) {
-        AVLNode<String> k1 = k2.left;
-        k2.left = k1.right;
-        k1.right = k2;
-        k2.setHeight(Math.max(getHeight(k2.left), getHeight(k2.right)) + 1);
-        k1.setHeight(Math.max(getHeight(k1.left), getHeight(k2)) + 1);
-        return k1;
+    public static AVLNode rotateWithLeftChild(AVLNode k1) {
+        AVLNode k2 = k1.left;
+        k1.left = k1.right;
+        k1.right = k1;
+        k1.height = (Math.max((k1.right.height), (k1.left.height)) + 1);
+        k2.height = (Math.max((k2.right.height), (k1.height)) + 1);
+        return k2;
     }
 
 
-    public AVLNode<String> doubleWithRightChild(AVLNode<String> k3) {
+    public static AVLNode doubleWithRightChild(AVLNode k3) {
         k3.right = rotateWithLeftChild(k3.right);
         return rotateWithRightChild(k3);
     }
 
 
-    public AVLNode<String> doubleWithLeftChild(AVLNode<String> k3) {
+    public static AVLNode doubleWithLeftChild(AVLNode k3) {
         k3.left = rotateWithRightChild(k3.left);
         return rotateWithLeftChild(k3);
     }
 
-    public AVLNode<String> findMin(AVLNode<String> t)
+    public AVLNode<T> findMin(AVLNode<T> t)
     {
         while(t != null)
             t = t.left;
@@ -135,7 +127,7 @@ public class AVLNode<String> {
         return t;
     }
 
-    public AVLNode<String> remove( String x, AVLNode<String> t )
+    public AVLNode<T> remove( T x, AVLNode<T> t )
      {
          if( t == null )
              return t; // Item not found; do nothing
