@@ -113,7 +113,7 @@ public class MainGUI extends JDialog {
 
                     try {
                         String condition = t.searchWord(word) ? "found" : "not found";
-                        sb.append(word + ' '+condition);
+                        sb.append(word + ' ' + condition + "\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -125,7 +125,7 @@ public class MainGUI extends JDialog {
                         for (String s : lines) {
                             sb.append(s + ' ');
                             String condition = t.searchWord(s) ? "found" : "not found";
-                            sb.append(s + ' '+condition);
+                            sb.append(condition + "\n");
                         }
 
                     } catch (Exception e1) {
@@ -144,7 +144,7 @@ public class MainGUI extends JDialog {
                     sb.append(word + ' ');
                     try {
                         String condition = t.deleteWord(word) ? "found" : "not found";
-                        sb.append(word + ' '+condition);
+                        sb.append(condition + "\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -157,7 +157,7 @@ public class MainGUI extends JDialog {
                         for (String s : lines) {
                             sb.append(s + ' ');
                             String condition = deleted[i] ? "found" : "not found";
-                            sb.append(s + ' '+condition);
+                            sb.append(condition + "\n");
                         }
 
                     } catch (Exception e1) {
