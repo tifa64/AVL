@@ -10,12 +10,12 @@ public class AVLNode<T> {
     private int height; // Height
 
 
-    AVLNode(T theElement) {
+    public AVLNode(T theElement) {
         this(theElement, null, null);
         this.height = 0;
     }
 
-    AVLNode(T theElement, AVLNode<T> lt, AVLNode<T> rt) {
+    public AVLNode(T theElement, AVLNode<T> lt, AVLNode<T> rt) {
         element = theElement;
         left = lt;
         right = rt;
@@ -41,7 +41,7 @@ public class AVLNode<T> {
         return t;
     }
 
-    public static AVLNode rotateWithRightChild(AVLNode k1) {
+    private static AVLNode rotateWithRightChild(AVLNode k1) {
         AVLNode k2 = k1.right;
         k1.right = k1.left;
         k1.left = k1;
@@ -50,7 +50,7 @@ public class AVLNode<T> {
         return k2;
     }
 
-    public static AVLNode rotateWithLeftChild(AVLNode k1) {
+    private static AVLNode rotateWithLeftChild(AVLNode k1) {
         AVLNode k2 = k1.left;
         k1.left = k1.right;
         k1.right = k1;
@@ -59,12 +59,12 @@ public class AVLNode<T> {
         return k2;
     }
 
-    public static AVLNode doubleWithRightChild(AVLNode k3) {
+    private static AVLNode doubleWithRightChild(AVLNode k3) {
         k3.right = rotateWithLeftChild(k3.right);
         return rotateWithRightChild(k3);
     }
 
-    public static AVLNode doubleWithLeftChild(AVLNode k3) {
+    private static AVLNode doubleWithLeftChild(AVLNode k3) {
         k3.left = rotateWithRightChild(k3.left);
         return rotateWithLeftChild(k3);
     }
