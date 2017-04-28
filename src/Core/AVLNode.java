@@ -9,19 +9,16 @@ public class AVLNode<T> {
     private T element; // The data in the node
     private AVLNode<T> left; // Left child
     private AVLNode<T> right; // Right child
-    private int height; // Height
 
 
     public AVLNode(T theElement) {
         this(theElement, null, null);
-        this.height = 0;
     }
 
     public AVLNode(T theElement, AVLNode<T> lt, AVLNode<T> rt) {
         element = theElement;
         left = lt;
         right = rt;
-        height = (Math.max((lt == null? 0 : lt.getRightHeight()), (rt == null? 0 : rt.getLeftHeight())) + 1);
     }
 
     private static AVLNode balance(AVLNode t) {
@@ -39,7 +36,6 @@ public class AVLNode<T> {
             else
                 t = doubleWithRightChild(t);
 
-        t.height = (Math.max(t.getLeftHeight(), t.getRightHeight()) + 1);
         return t;
     }
 
@@ -47,8 +43,6 @@ public class AVLNode<T> {
         AVLNode k2 = k1.right;
         k1.right = k1.left;
         k1.left = k1;
-        k1.height = (Math.max((k1.left.height), (k1.right.height)) + 1);
-        k2.height = (Math.max((k2.left.height), (k1.height)) + 1);
         return k2;
     }
 
@@ -56,8 +50,6 @@ public class AVLNode<T> {
         AVLNode k2 = k1.left;
         k1.left = k1.right;
         k1.right = k1;
-        k1.height = (Math.max((k1.right.height), (k1.left.height)) + 1);
-        k2.height = (Math.max((k2.right.height), (k1.height)) + 1);
         return k2;
     }
 
@@ -75,7 +67,6 @@ public class AVLNode<T> {
         if (source == null) {
             destination = null;
         } else {
-            destination.height = source.height;
             destination.left = source.left;
             destination.right = source.right;
             destination.element = source.element;
@@ -83,11 +74,11 @@ public class AVLNode<T> {
     }
 
     private int getLeftHeight() {
-        return this.left == null? 0 : this.left.height;
+        return this.left == null? 0 : this.left.getHeight();
     }
 
     private int getRightHeight() {
-        return this.right == null? 0 : this.right.height;
+        return this.right == null? 0 : this.right.getHeight();
     }
 
     private AVLNode<T> remove(T x) {
@@ -135,7 +126,8 @@ public class AVLNode<T> {
     }
 
     public int getHeight() {
-        return height;
+
+        return 1 + Math.max(this.left == null ? 0 : this.left.getHeight(), this.right == null ? 0 : this.right.getHeight());
     }
 
     public AVLNode<T> insert(T x) throws Exception {
