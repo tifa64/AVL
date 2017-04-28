@@ -41,21 +41,21 @@ public class AVLNode<T> {
 
     private static AVLNode rotateWithRightChild(AVLNode k1) {
         AVLNode k2 = k1.right;
-        k1.right = k1.left;
-        k1.left = k1;
+        k1.right = k2.left;
+        k2.left = k1;
         return k2;
     }
 
-    private static AVLNode rotateWithLeftChild(AVLNode k1) {
-        AVLNode k2 = k1.left;
-        k1.left = k1.right;
-        k1.right = k1;
-        return k2;
+    private static AVLNode rotateWithLeftChild(AVLNode k2) {
+        AVLNode k1 = k2.left;
+        k2.left = k1.right;
+        k1.right = k2;
+        return k1;
     }
 
-    private static AVLNode doubleWithRightChild(AVLNode k3) {
-        k3.right = rotateWithLeftChild(k3.right);
-        return rotateWithRightChild(k3);
+    private static AVLNode doubleWithRightChild(AVLNode k1) {
+        k1.right = rotateWithLeftChild(k1.right);
+        return rotateWithRightChild(k1);
     }
 
     private static AVLNode doubleWithLeftChild(AVLNode k3) {
@@ -116,7 +116,6 @@ public class AVLNode<T> {
     }
 
     public int getHeight() {
-
         return 1 + Math.max(this.left == null ? 0 : this.left.getHeight(), this.right == null ? 0 : this.right.getHeight());
     }
 
