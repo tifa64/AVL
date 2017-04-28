@@ -10,28 +10,43 @@ import java.util.List;
  * Created by louay on 4/28/2017.
  */
 public class Tree {
+
     private AVLNode<String> root = null;
+    private int size;
 
     public Tree(){
-
+        size = 0;
     }
 
-    public void insertWord(String word){
+    public boolean insertWord(String word){
         if (root == null){
             root = new AVLNode<String>(word);
+            size++;
+            return true;
         } else {
-            root.insert(word);
+            try {
+                root.insert(word);
+                size++;
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 
-    public void insertWords(File file){
+    public boolean[] insertWords(File file){
         try {
             List<String> lines = Files.readAllLines(Paths.get(file.getPath()));
+            boolean[] inserted = new boolean[lines.size()];
+            int i = 0;
             for (String line : lines) {
-                this.insertWord(line);
+                inserted[i] = this.insertWord(line);
+                i++;
             }
+            return inserted;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 

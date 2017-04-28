@@ -126,7 +126,7 @@ public class AVLNode<T> {
         return height;
     }
 
-    public AVLNode<T> insert(T x) {
+    public AVLNode<T> insert(T x) throws Exception {
 
 
         T treeElement = x;
@@ -138,7 +138,7 @@ public class AVLNode<T> {
         else if (compareResult > 0)
             this.right = insert(x);
         else
-            System.out.println("Duplicate");
+            throw new Exception("Duplicate");
         return balance(this);
     }
 
