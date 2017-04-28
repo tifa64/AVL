@@ -21,7 +21,7 @@ public class AVLNode<T> {
         element = theElement;
         left = lt;
         right = rt;
-        height = (Math.max((lt.right.height), (rt.left.height)) + 1);
+        height = (Math.max((lt == null? 0 : lt.right == null? 0 : lt.right.height), (rt == null? 0 : rt.left == null? 0 : rt.left.height)) + 1);
     }
 
     private static AVLNode balance(AVLNode t) {
@@ -132,13 +132,22 @@ public class AVLNode<T> {
         T treeElement = x;
         int compareResult = x.toString().compareTo(this.element.toString());
 
-        if (compareResult < 0)
-            this.left = insert(x);
-
-        else if (compareResult > 0)
-            this.right = insert(x);
-        else
+        if (compareResult < 0) {
+            if (this.left != null){
+                this.left = this.left.insert(x);
+            } else {
+                this.left = new AVLNode<T>(x);
+            }
+        }
+        else if (compareResult > 0){
+            if (this.right != null){
+                this.right = this.right.insert(x);
+            } else {
+                this.right = new AVLNode<T>(x);
+            }
+        } else {
             throw new Exception("Duplicate");
+        }
         return balance(this);
     }
 
