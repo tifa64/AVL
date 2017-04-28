@@ -6,6 +6,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class MainGUI extends JDialog {
     private JPanel contentPane;
@@ -76,14 +80,26 @@ public class MainGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null){
+
                         String word = wordTextField.getText();
                         sb.append(word + ' ');
                         sb.append(t.insertWord(word));
 
                     } else {
-                        boolean inserted = t.insertWords(fileForOperations);
-                    }
+                    try {
+                        boolean[] inserted = t.insertWords(fileForOperations);
+                        List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
+                        int i = 0;
+                        for(String s : lines)
+                        {
+                            sb.append(s + ' ');
+                            sb.append(inserted[i]);
 
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
 
             }
         });
