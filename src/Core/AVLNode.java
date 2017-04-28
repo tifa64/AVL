@@ -26,12 +26,12 @@ public class AVLNode<T> {
             return t;
 
         if (t.getLeftHeight() - t.getRightHeight() > ALLOWED_IMBALANCE)
-            if ((t.left == null? 0 : t.left.getLeftHeight()) >= (t.left == null? 0 : t.left.getRightHeight()))
+            if ((t.left == null ? 0 : t.left.getLeftHeight()) >= (t.left == null ? 0 : t.left.getRightHeight()))
                 t = rotateWithLeftChild(t);
             else
                 t = doubleWithLeftChild(t);
         else if (t.getRightHeight() - t.getLeftHeight() > ALLOWED_IMBALANCE)
-            if ((t.right == null? 0 : t.right.getRightHeight()) >= (t.right == null? 0 : t.right.getLeftHeight()))
+            if ((t.right == null ? 0 : t.right.getRightHeight()) >= (t.right == null ? 0 : t.right.getLeftHeight()))
                 t = rotateWithRightChild(t);
             else
                 t = doubleWithRightChild(t);
@@ -63,42 +63,32 @@ public class AVLNode<T> {
         return rotateWithLeftChild(k3);
     }
 
-    private static void setNode(AVLNode source, AVLNode destination) {
-        if (source == null) {
-            destination = null;
-        } else {
-            destination.left = source.left;
-            destination.right = source.right;
-            destination.element = source.element;
-        }
-    }
-
     private int getLeftHeight() {
-        return this.left == null? 0 : this.left.getHeight();
+        return this.left == null ? 0 : this.left.getHeight();
     }
 
     private int getRightHeight() {
-        return this.right == null? 0 : this.right.getHeight();
+        return this.right == null ? 0 : this.right.getHeight();
     }
 
-    private AVLNode<T> remove(T x) {
-        int compareResult = x.toString().compareTo(this.getElement().toString());
+    private static AVLNode remove(Object x, AVLNode source) {
+        int compareResult = x.toString().compareTo(source.element.toString());
 
         if (compareResult < 0) {
-            if (this.left == null)
+            if (source.left == null)
                 return null;
-            this.left = this.left.remove(x);
+            source.left = remove(x, source.left);
         } else if (compareResult > 0) {
-            if (this.right == null)
+            if (source.right == null)
                 return null;
-            this.right = this.right.remove(x);
-        } else if (this.left != null && this.right != null) // Two children
-        {
-            this.element = findMin(this.right).element;
-            this.right = this.right.remove(this.element);
+            source.right = remove(x, source.right);
+        } else if (source.left != null && source.right != null) {
+            // Two children
+            source.element = source.findMin(source.right).element;
+            source.right = remove(source.element, source.right);
         } else
-            this.setNode((this.left != null) ? this.left : this.right, this);
-        return balance(this);
+            source = source.left != null ? source.left : source.right;
+        return balance(source);
     }
 
     public T getElement() {
@@ -133,14 +123,13 @@ public class AVLNode<T> {
     public AVLNode<T> insert(T x) throws Exception {
         int compareResult = x.toString().compareTo(this.element.toString());
         if (compareResult < 0) {
-            if (this.left != null){
+            if (this.left != null) {
                 this.left = this.left.insert(x);
             } else {
                 this.left = new AVLNode<T>(x);
             }
-        }
-        else if (compareResult > 0){
-            if (this.right != null){
+        } else if (compareResult > 0) {
+            if (this.right != null) {
                 this.right = this.right.insert(x);
             } else {
                 this.right = new AVLNode<T>(x);
@@ -152,7 +141,7 @@ public class AVLNode<T> {
     }
 
     public AVLNode<T> findMin(AVLNode<T> t) {
-        while (t != null)
+        while (t.left != null)
             t = t.left;
 
         return t;
@@ -176,7 +165,7 @@ public class AVLNode<T> {
 
     public AVLNode<T> delete(T x) {
         if (search(x))
-            return remove(x);
+            return remove(x, this);
 
         return null;
     }

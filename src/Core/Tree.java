@@ -57,6 +57,9 @@ public class Tree {
                 return false;
             }
             size--;
+            if (size == 0) {
+                this.root = null;
+            }
             return true;
         } else {
             throw new Exception("Tree is empty");
@@ -108,6 +111,6 @@ public class Tree {
     }
 
     public int getHeight() {
-        return this.root.getHeight();
+        return this.root == null? 0 : this.root.getHeight();
     }
 }
