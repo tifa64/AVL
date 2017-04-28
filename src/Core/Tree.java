@@ -102,4 +102,12 @@ public class Tree {
         }
         return null;
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getHeight() {
+        return this.root.getHeight();
+    }
 }
