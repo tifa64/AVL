@@ -1,73 +1,25 @@
-import java.util.Comparator;
-import java.lang.*;
-
 /**
  * Created by Krietallo on 4/27/2017.
  */
 public class AVLNode<T> {
 
-    AVLNode(T theElement) {
-        this(theElement, null, null);
-    }
-
+    private static final int ALLOWED_IMBALANCE = 1; //Difference between left and right subtrees
     private T element; // The data in the node
     private AVLNode<T> left; // Left child
     private AVLNode<T> right; // Right child
     private int height; // Height
-    private static final int ALLOWED_IMBALANCE = 1; //Difference between left and right subtrees
+
+
+    AVLNode(T theElement) {
+        this(theElement, null, null);
+        this.height = 0;
+    }
 
     AVLNode(T theElement, AVLNode<T> lt, AVLNode<T> rt) {
         element = theElement;
         left = lt;
         right = rt;
-        height = 0;
-    }
-
-
-    public T getElement() {
-        return element;
-    }
-
-    public void setElement(T element) {
-        this.element = element;
-    }
-
-    public AVLNode<T> getLeft() {
-        return left;
-    }
-
-    public void setLeft(AVLNode<T> left) {
-        this.left = left;
-    }
-
-    public AVLNode<T> getRight() {
-        return right;
-    }
-
-    public void setRight(AVLNode<T> right) {
-        this.right = right;
-    }
-
-    public int getHeight() {
-
-        return height;
-    }
-
-
-    public AVLNode<T> insert(T x) {
-
-
-        T treeElement = x ;
-        int compareResult = x.toString().compareTo(this.element.toString());
-
-        if (compareResult < 0)
-            this.left = insert(x);
-
-        else if (compareResult > 0)
-            this.right = insert(x);
-        else
-            System.out.println("Duplicate");
-        return balance(this);
+        height = (Math.max((lt.right.height), (rt.left.height)) + 1);
     }
 
     private static AVLNode balance(AVLNode t) {
@@ -107,46 +59,87 @@ public class AVLNode<T> {
         return k2;
     }
 
-
     public static AVLNode doubleWithRightChild(AVLNode k3) {
         k3.right = rotateWithLeftChild(k3.right);
         return rotateWithRightChild(k3);
     }
-
 
     public static AVLNode doubleWithLeftChild(AVLNode k3) {
         k3.left = rotateWithRightChild(k3.left);
         return rotateWithLeftChild(k3);
     }
 
-    public AVLNode<T> findMin(AVLNode<T> t)
-    {
-        while(t != null)
+    private void setNode (AVLNode<T> baseNode){
+        this.height = baseNode.height;
+        this.left = baseNode.left;
+        this.right = baseNode.right;
+        this.element = baseNode.element;
+    }
+
+    public T getElement() {
+        return element;
+    }
+
+    public void setElement(T element) {
+        this.element = element;
+    }
+
+    public AVLNode<T> getLeft() {
+        return left;
+    }
+
+    public void setLeft(AVLNode<T> left) {
+        this.left = left;
+    }
+
+    public AVLNode<T> getRight() {
+        return right;
+    }
+
+    public void setRight(AVLNode<T> right) {
+        this.right = right;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public AVLNode<T> insert(T x) {
+
+
+        T treeElement = x;
+        int compareResult = x.toString().compareTo(this.element.toString());
+
+        if (compareResult < 0)
+            this.left = insert(x);
+
+        else if (compareResult > 0)
+            this.right = insert(x);
+        else
+            System.out.println("Duplicate");
+        return balance(this);
+    }
+
+    public AVLNode<T> findMin(AVLNode<T> t) {
+        while (t != null)
             t = t.left;
 
         return t;
     }
 
-    public AVLNode<T> remove( T x, AVLNode<T> t )
-     {
-         if( t == null )
-             return t; // Item not found; do nothing
+    public AVLNode<T> remove(T x) {
+        int compareResult = x.toString().compareTo(this.getElement().toString());
 
-         int compareResult = x.toString().compareTo(t.getElement().toString());
-
-         if( compareResult < 0 )
-             t.left = remove( x, t.left );
-         else if( compareResult > 0 )
-             t.right = remove( x, t.right );
-         else if( t.left != null && t.right != null ) // Two children
-             {
-             t.element = findMin( t.right ).element;
-             t.right = remove( t.element, t.right );
-             }
-         else
-         t = ( t.left != null ) ? t.left : t.right;
-         return balance( t );
-         }
-
-
+        if (compareResult < 0)
+            this.left = this.left.remove(x);
+        else if (compareResult > 0)
+            this.right = this.right.remove(x);
+        else if (this.left != null && this.right != null) // Two children
+        {
+            this.element = findMin(this.right).element;
+            this.right = this.right.remove(this.element);
+        } else
+            this.setNode((this.left != null) ? this.left : this.right);
+        return balance(this);
+    }
 }
