@@ -62,8 +62,21 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-
+                    try {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        boolean[] inserted = t.insertWords(selectedFile);
+                        List<String> lines = null;
+                        lines = Files.readAllLines(Paths.get(selectedFile.getPath()));
+                        int i = 0;
+                        for (String s : lines) {
+                            sb.append(s + ' ');
+                            String condition = inserted[i] ? "inserted succesfully" : "is duplicate";
+                            sb.append(condition + "\n");
+                            i++;
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
@@ -95,7 +108,7 @@ public class MainGUI extends JDialog {
                             sb.append(s + ' ');
                             String condition = inserted[i] ? "inserted succesfully" : "is duplicate";
                             sb.append(condition + "\n");
-
+                            i++;
                         }
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -119,13 +132,14 @@ public class MainGUI extends JDialog {
                     }
                 } else {
                     try {
-                        boolean[] founded = t.searchWords(fileForOperations);
+                        boolean[] found = t.searchWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
                         for (String s : lines) {
                             sb.append(s + ' ');
-                            String condition = t.searchWord(s) ? "found" : "not found";
+                            String condition = found[i] ? "found" : "not found";
                             sb.append(condition + "\n");
+                            i++;
                         }
 
                     } catch (Exception e1) {
@@ -141,14 +155,14 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null) {
                     String word = wordTextField.getText();
-                    sb.append(word + ' ');
                     try {
-                        String condition = t.deleteWord(word) ? "found" : "not found";
+                        String condition = t.deleteWord(word) ? "deleted" : "not found";
+                        sb.append(word + ' ');
                         sb.append(condition + "\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
+                        sb.append("Tree is empty.");
                     }
-
                 } else {
                     try {
                         boolean[] deleted = t.deleteWords(fileForOperations);
@@ -156,8 +170,9 @@ public class MainGUI extends JDialog {
                         int i = 0;
                         for (String s : lines) {
                             sb.append(s + ' ');
-                            String condition = deleted[i] ? "found" : "not found";
+                            String condition = deleted[i] ? "deleted" : "not found";
                             sb.append(condition + "\n");
+                            i++;
                         }
 
                     } catch (Exception e1) {
