@@ -109,9 +109,26 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null){
                     String word = wordTextField.getText();
-                    // call function to search a single word from text field
+                    sb.append(word + ' ');
+                    try {
+                        sb.append(t.searchWord(word));
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 } else {
-                    // batch search from file
+                    try {
+                        boolean [] founded = t.searchWords(fileForOperations);
+                        List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
+                        int i = 0;
+                        for(String s : lines)
+                        {
+                            sb.append(s + ' ');
+                            sb.append(founded[i]);
+                        }
+
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });
@@ -121,16 +138,38 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null){
                     String word = wordTextField.getText();
-                    // call function to delete a single word from text field
+                    sb.append(word + ' ');
+                    try {
+                        sb.append(t.deleteWord(word));
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
                 } else {
-                    // batch delete from file
+                    try {
+                        boolean [] deleted = t.deleteWords(fileForOperations);
+                        List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
+                        int i = 0;
+                        for(String s : lines)
+                        {
+                            sb.append(s + ' ');
+                            sb.append(deleted[i]);
+                        }
+
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                 }
-            }
+
+                }
         });
 
         printSizeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                sb.append("Size of Dictionary : " + "\n" + t.getSize());
+                sb.append("Height of Tree : " + "\n" + t.getHeight());
 
             }
         });
