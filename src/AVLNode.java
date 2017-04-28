@@ -126,19 +126,58 @@ public class AVLNode<T> {
 
         return t;
     }
+    public boolean search(T x)
+    {
+        int compareResult = x.toString().compareTo(this.getElement().toString());
+        boolean found = false;
+        if (compareResult < 0)
+        {
+            if(this.left == null)
+                return false;
+            found = this.left.search(x);
+        }
 
-    public AVLNode<T> remove(T x) {
+        else if (compareResult > 0)
+        {
+            if(this.right == null)
+                return false;
+            found = this.right.search(x);
+        }
+        return found;
+
+    }
+
+    public AVLNode<T> delete(T x)
+    {
+        if(search(x))
+           return remove(x);
+
+        return null;
+    }
+
+    private AVLNode<T> remove(T x) {
         int compareResult = x.toString().compareTo(this.getElement().toString());
 
         if (compareResult < 0)
+        {
+            if(this.left == null)
+                return null;
             this.left = this.left.remove(x);
+        }
+
         else if (compareResult > 0)
+        {
+            if(this.right == null)
+                return null;
             this.right = this.right.remove(x);
+        }
+
         else if (this.left != null && this.right != null) // Two children
         {
             this.element = findMin(this.right).element;
             this.right = this.right.remove(this.element);
-        } else
+        }
+        else
             this.setNode((this.left != null) ? this.left : this.right);
         return balance(this);
     }
