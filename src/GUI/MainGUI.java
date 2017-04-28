@@ -1,5 +1,7 @@
 package GUI;
 
+import Core.Tree;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +20,10 @@ public class MainGUI extends JDialog {
     private JButton printSizeButton;
     private JTextArea textArea1;
 
+
     private File fileForOperations = null;
+    private final StringBuilder sb = new StringBuilder();
+    private Tree t = new Tree();
 
     private MainGUI() {
         setModal(true);
@@ -71,11 +76,15 @@ public class MainGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null){
-                    String word = wordTextField.getText();
-                    // call function to insert a single word from text field
-                } else {
-                    // batch insert from file
-                }
+                        String word = wordTextField.getText();
+                        sb.append(word + ' ');
+                        sb.append(t.insertWord(word));
+
+                    } else {
+                        boolean inserted = t.insertWords(fileForOperations);
+                    }
+
+
             }
         });
 
