@@ -21,25 +21,25 @@ public class AVLNode<T> {
         element = theElement;
         left = lt;
         right = rt;
-        height = (Math.max((lt == null? 0 : lt.right == null? 0 : lt.right.height), (rt == null? 0 : rt.left == null? 0 : rt.left.height)) + 1);
+        height = (Math.max((lt == null? 0 : lt.getRightHeight()), (rt == null? 0 : rt.getLeftHeight())) + 1);
     }
 
     private static AVLNode balance(AVLNode t) {
         if (t == null)
             return t;
 
-        if (t.left.height - t.right.height > ALLOWED_IMBALANCE)
-            if (t.left.left.height >= t.left.right.height)
+        if (t.getLeftHeight() - t.getRightHeight() > ALLOWED_IMBALANCE)
+            if ((t.left == null? 0 : t.left.getLeftHeight()) >= (t.left == null? 0 : t.left.getRightHeight()))
                 t = rotateWithLeftChild(t);
             else
                 t = doubleWithLeftChild(t);
-        else if (t.right.height - t.left.height > ALLOWED_IMBALANCE)
-            if (t.right.right.height >= t.right.left.height)
+        else if (t.getRightHeight() - t.getLeftHeight() > ALLOWED_IMBALANCE)
+            if ((t.right == null? 0 : t.right.getRightHeight()) >= (t.right == null? 0 : t.right.getLeftHeight()))
                 t = rotateWithRightChild(t);
             else
                 t = doubleWithRightChild(t);
 
-        t.height = (Math.max(t.left.height, t.right.height) + 1);
+        t.height = (Math.max(t.getLeftHeight(), t.getRightHeight()) + 1);
         return t;
     }
 
@@ -76,6 +76,14 @@ public class AVLNode<T> {
         this.left = baseNode.left;
         this.right = baseNode.right;
         this.element = baseNode.element;
+    }
+
+    private int getLeftHeight() {
+        return this.left == null? 0 : this.left.height;
+    }
+
+    private int getRightHeight() {
+        return this.right == null? 0 : this.right.height;
     }
 
     private AVLNode<T> remove(T x) {
@@ -127,11 +135,7 @@ public class AVLNode<T> {
     }
 
     public AVLNode<T> insert(T x) throws Exception {
-
-
-        T treeElement = x;
         int compareResult = x.toString().compareTo(this.element.toString());
-
         if (compareResult < 0) {
             if (this.left != null){
                 this.left = this.left.insert(x);
