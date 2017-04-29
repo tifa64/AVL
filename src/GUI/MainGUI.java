@@ -3,6 +3,7 @@ package GUI;
 import Core.Tree;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -23,6 +24,7 @@ public class MainGUI extends JDialog {
     private JButton deleteButton;
     private JButton printSizeButton;
     private JTextArea outputTextArea;
+    private JTextArea treeTextArea;
 
 
     private File fileForOperations = null;
@@ -32,8 +34,11 @@ public class MainGUI extends JDialog {
     private MainGUI() {
         setModal(true);
         setContentPane(contentPane);
-        filePathTextField.setEnabled(false);
+        filePathTextField.setEditable(false);
         filePathTextField.setText("No file selected.");
+        treeTextArea.setFont(Font.getFont(Font.MONOSPACED));
+        treeTextArea.setEditable(false);
+        outputTextArea.setEditable(false);
         this.initComponents();
     }
 
@@ -194,7 +199,7 @@ public class MainGUI extends JDialog {
 
                 sb.append("Size of Dictionary: ").append(t.getSize()).append("\n");
                 sb.append("Height of Tree: ").append(t.getHeight()).append("\n");
-                sb.append(t.toString());
+                treeTextArea.setText(t.toString());
                 outputTextArea.setText(sb.toString());
             }
         });
