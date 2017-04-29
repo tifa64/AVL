@@ -36,7 +36,7 @@ public class MainGUI extends JDialog {
         setContentPane(contentPane);
         filePathTextField.setEditable(false);
         filePathTextField.setText("No file selected.");
-        treeTextArea.setFont(Font.getFont(Font.MONOSPACED));
+        treeTextArea.setFont(new Font("monospaced", Font.PLAIN, 12));
         treeTextArea.setEditable(false);
         outputTextArea.setEditable(false);
         this.initComponents();
