@@ -68,9 +68,11 @@ public class MainGUI extends JDialog {
                             sb.append(condition).append("\n");
                             i++;
                         }
+                        sb.append("\n");
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+                    outputTextArea.setText(sb.toString());
                 }
             }
         });
@@ -105,7 +107,7 @@ public class MainGUI extends JDialog {
                     String word = wordTextField.getText();
                     sb.append(word).append(": ");
                     String condition = t.insertWord(word) ? "inserted succesfully" : "is duplicate";
-                    sb.append(condition).append("\n");
+                    sb.append(condition).append("\n\n");
                     wordTextField.setText("");
                 } else {
                     try {
@@ -118,6 +120,7 @@ public class MainGUI extends JDialog {
                             sb.append(condition).append("\n");
                             i++;
                         }
+                        sb.append("\n");
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -133,7 +136,7 @@ public class MainGUI extends JDialog {
                     String word = wordTextField.getText();
                     try {
                         String condition = t.searchWord(word) ? "found" : "not found";
-                        sb.append(word).append(": ").append(condition).append("\n");
+                        sb.append(word).append(": ").append(condition).append("\n\n");
                         wordTextField.setText("");
                     } catch (Exception e1) {
                         e1.printStackTrace();
@@ -149,7 +152,7 @@ public class MainGUI extends JDialog {
                             sb.append(condition).append("\n");
                             i++;
                         }
-
+                        sb.append("\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                         sb.append("Tree is empty.");
@@ -167,11 +170,11 @@ public class MainGUI extends JDialog {
                     try {
                         String condition = t.deleteWord(word) ? "deleted" : "not found";
                         sb.append(word).append(": ");
-                        sb.append(condition).append("\n");
+                        sb.append(condition).append("\n\n");
                         wordTextField.setText("");
                     } catch (Exception e1) {
                         e1.printStackTrace();
-                        sb.append("Tree is empty.");
+                        sb.append("Tree is empty.\n\n");
                     }
                 } else {
                     try {
@@ -184,7 +187,7 @@ public class MainGUI extends JDialog {
                             sb.append(condition).append("\n");
                             i++;
                         }
-
+                        sb.append("\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -198,7 +201,7 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 sb.append("Size of Dictionary: ").append(t.getSize()).append("\n");
-                sb.append("Height of Tree: ").append(t.getHeight()).append("\n");
+                sb.append("Height of Tree: ").append(t.getHeight()).append("\n\n");
                 treeTextArea.setText(t.toString());
                 outputTextArea.setText(sb.toString());
             }
