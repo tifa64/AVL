@@ -106,7 +106,7 @@ public class MainGUI extends JDialog {
                 if (fileForOperations == null) {
                     String word = wordTextField.getText();
                     sb.append(word).append(": ");
-                    String condition = t.insertWord(word) ? "inserted succesfully" : "is duplicate";
+                    String condition = t.insertWord(word) ? "inserted succesfully" : "ERROR: Word already in the dictionary!";
                     sb.append(condition).append("\n\n");
                     wordTextField.setText("");
                 } else {
@@ -116,7 +116,7 @@ public class MainGUI extends JDialog {
                         int i = 0;
                         for (String s : lines) {
                             sb.append(s).append(": ");
-                            String condition = inserted[i] ? "inserted succesfully" : "is duplicate";
+                            String condition = inserted[i] ? "inserted succesfully" : "ERROR: Word already in the dictionary!";
                             sb.append(condition).append("\n");
                             i++;
                         }
@@ -135,7 +135,7 @@ public class MainGUI extends JDialog {
                 if (fileForOperations == null) {
                     String word = wordTextField.getText();
                     try {
-                        String condition = t.searchWord(word) ? "found" : "not found";
+                        String condition = t.searchWord(word) ? "YES" : "NO";
                         sb.append(word).append(": ").append(condition).append("\n\n");
                         wordTextField.setText("");
                     } catch (Exception e1) {
@@ -148,7 +148,7 @@ public class MainGUI extends JDialog {
                         int i = 0;
                         for (String s : lines) {
                             sb.append(s).append(": ");
-                            String condition = found[i] ? "found" : "not found";
+                            String condition = found[i] ? "YES" : "NO";
                             sb.append(condition).append("\n");
                             i++;
                         }
@@ -168,7 +168,7 @@ public class MainGUI extends JDialog {
                 if (fileForOperations == null) {
                     String word = wordTextField.getText();
                     try {
-                        String condition = t.deleteWord(word) ? "deleted" : "not found";
+                        String condition = t.deleteWord(word) ? "deleted" : "ERROR: Word isn't found in Dictionary!";
                         sb.append(word).append(": ");
                         sb.append(condition).append("\n\n");
                         wordTextField.setText("");
@@ -183,7 +183,7 @@ public class MainGUI extends JDialog {
                         int i = 0;
                         for (String s : lines) {
                             sb.append(s).append(": ");
-                            String condition = deleted[i] ? "deleted" : "not found";
+                            String condition = deleted[i] ? "deleted" : "ERROR: Word isn't found in Dictionary!";
                             sb.append(condition).append("\n");
                             i++;
                         }
