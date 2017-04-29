@@ -3,6 +3,7 @@ package GUI;
 import Core.Tree;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,7 +23,8 @@ public class MainGUI extends JDialog {
     private JButton searchButton;
     private JButton deleteButton;
     private JButton printSizeButton;
-    private JTextArea textArea1;
+    private JTextArea outputTextArea;
+    private JTextArea treeTextArea;
 
 
     private File fileForOperations = null;
@@ -32,8 +34,11 @@ public class MainGUI extends JDialog {
     private MainGUI() {
         setModal(true);
         setContentPane(contentPane);
-        filePathTextField.setEnabled(false);
+        filePathTextField.setEditable(false);
         filePathTextField.setText("No file selected.");
+        treeTextArea.setFont(new Font("monospaced", Font.PLAIN, 12));
+        treeTextArea.setEditable(false);
+        outputTextArea.setEditable(false);
         this.initComponents();
     }
 
@@ -46,17 +51,6 @@ public class MainGUI extends JDialog {
     }
 
     private void initComponents() {
-        loadFileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    fileForOperations = fileChooser.getSelectedFile();
-                    filePathTextField.setText(fileForOperations.getAbsolutePath());
-                }
-            }
-        });
-
         dictionaryFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,14 +63,29 @@ public class MainGUI extends JDialog {
                         lines = Files.readAllLines(Paths.get(selectedFile.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = inserted[i] ? "inserted succesfully" : "is duplicate";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
+                        sb.append("\n");
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+                    outputTextArea.setText(sb.toString());
+                }
+            }
+        });
+
+        loadFileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    fileForOperations = fileChooser.getSelectedFile();
+                    filePathTextField.setText(fileForOperations.getAbsolutePath());
+                    wordTextField.setEnabled(false);
+                    wordTextField.setText("File is chosen for batch actions. Clear file to make an operation on a single word.");
                 }
             }
         });
@@ -86,6 +95,8 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 fileForOperations = null;
                 filePathTextField.setText("No file selected.");
+                wordTextField.setEnabled(true);
+                wordTextField.setText("");
             }
         });
 
@@ -93,28 +104,28 @@ public class MainGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null) {
-
                     String word = wordTextField.getText();
-                    sb.append(word + ' ');
+                    sb.append(word).append(": ");
                     String condition = t.insertWord(word) ? "inserted succesfully" : "is duplicate";
-                    sb.append(condition + "\n");
-
+                    sb.append(condition).append("\n\n");
+                    wordTextField.setText("");
                 } else {
                     try {
                         boolean[] inserted = t.insertWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = inserted[i] ? "inserted succesfully" : "is duplicate";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
+                        sb.append("\n");
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 }
-                textArea1.setText(sb.toString());
+                outputTextArea.setText(sb.toString());
             }
         });
 
@@ -123,10 +134,10 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null) {
                     String word = wordTextField.getText();
-
                     try {
                         String condition = t.searchWord(word) ? "found" : "not found";
-                        sb.append(word + ' ' + condition + "\n");
+                        sb.append(word).append(": ").append(condition).append("\n\n");
+                        wordTextField.setText("");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -136,17 +147,18 @@ public class MainGUI extends JDialog {
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = found[i] ? "found" : "not found";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
-
+                        sb.append("\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
+                        sb.append("Tree is empty.");
                     }
                 }
-                textArea1.setText(sb.toString());
+                outputTextArea.setText(sb.toString());
             }
         });
 
@@ -157,11 +169,12 @@ public class MainGUI extends JDialog {
                     String word = wordTextField.getText();
                     try {
                         String condition = t.deleteWord(word) ? "deleted" : "not found";
-                        sb.append(word + ' ');
-                        sb.append(condition + "\n");
+                        sb.append(word).append(": ");
+                        sb.append(condition).append("\n\n");
+                        wordTextField.setText("");
                     } catch (Exception e1) {
                         e1.printStackTrace();
-                        sb.append("Tree is empty.");
+                        sb.append("Tree is empty.\n\n");
                     }
                 } else {
                     try {
@@ -169,17 +182,17 @@ public class MainGUI extends JDialog {
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = deleted[i] ? "deleted" : "not found";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
-
+                        sb.append("\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                 }
-                textArea1.setText(sb.toString());
+                outputTextArea.setText(sb.toString());
             }
         });
 
@@ -187,11 +200,10 @@ public class MainGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                sb.append("Size of Dictionary : " + t.getSize() + "\n");
-                sb.append("Height of Tree : " + t.getHeight() + "\n");
-
-                textArea1.setText(sb.toString());
-
+                sb.append("Size of Dictionary: ").append(t.getSize()).append("\n");
+                sb.append("Height of Tree: ").append(t.getHeight()).append("\n\n");
+                treeTextArea.setText(t.toString());
+                outputTextArea.setText(sb.toString());
             }
         });
     }

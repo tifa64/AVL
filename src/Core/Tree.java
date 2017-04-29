@@ -1,5 +1,7 @@
 package Core;
 
+import GUI.TreePrinter;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +18,11 @@ public class Tree {
 
     public Tree(){
         size = 0;
+    }
+
+    @Override
+    public String toString() {
+        return TreePrinter.printNode(root);
     }
 
     public boolean insertWord(String word){
