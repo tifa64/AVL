@@ -58,9 +58,9 @@ public class MainGUI extends JDialog {
                         lines = Files.readAllLines(Paths.get(selectedFile.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = inserted[i] ? "inserted succesfully" : "is duplicate";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
                     } catch (IOException e1) {
@@ -98,9 +98,9 @@ public class MainGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 if (fileForOperations == null) {
                     String word = wordTextField.getText();
-                    sb.append(word + ' ');
+                    sb.append(word).append(": ");
                     String condition = t.insertWord(word) ? "inserted succesfully" : "is duplicate";
-                    sb.append(condition + "\n");
+                    sb.append(condition).append("\n");
                     wordTextField.setText("");
                 } else {
                     try {
@@ -108,9 +108,9 @@ public class MainGUI extends JDialog {
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = inserted[i] ? "inserted succesfully" : "is duplicate";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
                     } catch (IOException e1) {
@@ -128,7 +128,7 @@ public class MainGUI extends JDialog {
                     String word = wordTextField.getText();
                     try {
                         String condition = t.searchWord(word) ? "found" : "not found";
-                        sb.append(word + ' ' + condition + "\n");
+                        sb.append(word).append(": ").append(condition).append("\n");
                         wordTextField.setText("");
                     } catch (Exception e1) {
                         e1.printStackTrace();
@@ -139,9 +139,9 @@ public class MainGUI extends JDialog {
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = found[i] ? "found" : "not found";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
 
@@ -161,8 +161,8 @@ public class MainGUI extends JDialog {
                     String word = wordTextField.getText();
                     try {
                         String condition = t.deleteWord(word) ? "deleted" : "not found";
-                        sb.append(word + ' ');
-                        sb.append(condition + "\n");
+                        sb.append(word).append(": ");
+                        sb.append(condition).append("\n");
                         wordTextField.setText("");
                     } catch (Exception e1) {
                         e1.printStackTrace();
@@ -174,9 +174,9 @@ public class MainGUI extends JDialog {
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
                         for (String s : lines) {
-                            sb.append(s + ' ');
+                            sb.append(s).append(": ");
                             String condition = deleted[i] ? "deleted" : "not found";
-                            sb.append(condition + "\n");
+                            sb.append(condition).append("\n");
                             i++;
                         }
 
@@ -192,11 +192,10 @@ public class MainGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                sb.append("Size of Dictionary : " + t.getSize() + "\n");
-                sb.append("Height of Tree : " + t.getHeight() + "\n");
-
+                sb.append("Size of Dictionary: ").append(t.getSize()).append("\n");
+                sb.append("Height of Tree: ").append(t.getHeight()).append("\n");
+                sb.append(t.toString());
                 outputTextArea.setText(sb.toString());
-
             }
         });
     }
