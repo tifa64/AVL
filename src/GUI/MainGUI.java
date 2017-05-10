@@ -114,13 +114,16 @@ public class MainGUI extends JDialog {
                         boolean[] inserted = t.insertWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
+                        int succeeded = 0;
                         for (String s : lines) {
-                            sb.append(s).append(": ");
+                            sb.append(s).append(":\t\t").append(s.length() < 14 ? "\t" : "");
                             String condition = inserted[i] ? "inserted succesfully" : "ERROR: Word already in the dictionary!";
+                            succeeded += (inserted[i]? 1 : 0);
                             sb.append(condition).append("\n");
                             i++;
                         }
-                        sb.append("\n");
+                        sb.append(succeeded).append(" elements inserted succesfully\n");
+                        sb.append(inserted.length - succeeded).append(" were duplicates\n\n");
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -146,13 +149,16 @@ public class MainGUI extends JDialog {
                         boolean[] found = t.searchWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
+                        int succeeded = 0;
                         for (String s : lines) {
-                            sb.append(s).append(": ");
+                            sb.append(s).append(":\t\t").append(s.length() < 14 ? "\t" : "");
                             String condition = found[i] ? "YES" : "NO";
+                            succeeded += (found[i]? 1 : 0);
                             sb.append(condition).append("\n");
                             i++;
                         }
-                        sb.append("\n");
+                        sb.append(succeeded).append(" elements found\n");
+                        sb.append(found.length - succeeded).append(" elements not found\n\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                         sb.append("Tree is empty.");
@@ -181,13 +187,16 @@ public class MainGUI extends JDialog {
                         boolean[] deleted = t.deleteWords(fileForOperations);
                         List<String> lines = Files.readAllLines(Paths.get(fileForOperations.getPath()));
                         int i = 0;
+                        int succeeded = 0;
                         for (String s : lines) {
-                            sb.append(s).append(": ");
+                            sb.append(s).append(":\t\t").append(s.length() < 14 ? "\t" : "");
                             String condition = deleted[i] ? "deleted" : "ERROR: Word isn't found in Dictionary!";
+                            succeeded += (deleted[i]? 1 : 0);
                             sb.append(condition).append("\n");
                             i++;
                         }
-                        sb.append("\n");
+                        sb.append(succeeded).append(" elements deleted\n");
+                        sb.append(deleted.length - succeeded).append(" elements not found\n\n");
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }

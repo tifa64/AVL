@@ -95,24 +95,12 @@ public class AVLNode<T> {
         return element;
     }
 
-    public void setElement(T element) {
-        this.element = element;
-    }
-
     public AVLNode<T> getLeft() {
         return left;
     }
 
-    public void setLeft(AVLNode<T> left) {
-        this.left = left;
-    }
-
     public AVLNode<T> getRight() {
         return right;
-    }
-
-    public void setRight(AVLNode<T> right) {
-        this.right = right;
     }
 
     public int getHeight() {
